@@ -3,71 +3,91 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// 環境変数の読み込み
-const SIGNED_ACCOUNT_ADDRESS_ON_ETHEREUM = process.env.SIGNED_ACOUNT_ADDRESS_ON_ETHERIUM;
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+/**
+ * 環境変数を読み込み、検証する
+ */
+function loadEnv(): { address: string; privateKey: string } {
+  const address = process.env.SIGNED_ACOUNT_ADDRESS_ON_ETHERIUM;
+  const privateKey = process.env.PRIVATE_KEY;
 
-if (!SIGNED_ACCOUNT_ADDRESS_ON_ETHEREUM || !PRIVATE_KEY) {
-  throw new Error('環境変数が設定されていません。');
+  if (!address || !privateKey) {
+    throw new Error('環境変数が正しく設定されていません。');
+  }
+
+  return { address, privateKey };
 }
 
-// メッセージを作成
-const timestamp = Date.now();
-const MESSAGE = `ようこそ!\nAddress: ${SIGNED_ACCOUNT_ADDRESS_ON_ETHEREUM}\ntimestamp: ${timestamp}`;
-console.log('Original Message:', MESSAGE);
+/**
+ * メッセージを作成し、ハッシュ化する
+ */
+function createHashedMessage(address: string): Buffer {
+  const timestamp = Date.now();
+  const message = `ようこそ!\nAddress: ${address}\ntimestamp: ${timestamp}`;
+  console.log(`📝 Original Message:\n${message}`);
 
-// メッセージのハッシュ化
-const HASHED_MESSAGE = EthUtil.keccak(Buffer.from(MESSAGE, 'utf-8'));
-console.log('Hashed Message:', HASHED_MESSAGE.toString('hex'));
+  const hashedMessage = EthUtil.keccak(Buffer.from(message, 'utf-8'));
+  console.log(`🔹 Hashed Message: ${hashedMessage.toString('hex')}`);
 
-// 秘密鍵をBuffer形式に変換
-const HASHED_PRIVATE_KEY = Buffer.from(PRIVATE_KEY, 'hex');
-if (!EthUtil.isValidPrivate(HASHED_PRIVATE_KEY)) {
-  throw new Error('無効な秘密鍵です。');
+  return hashedMessage;
 }
 
-// メッセージと秘密鍵から署名を作成する関数
-function getSignature(hashedMessage: Buffer, privateKey: Buffer) {
-  const createdSignature = EthUtil.ecsign(hashedMessage, privateKey);
-  return createdSignature;
+/**
+ * 署名を作成する
+ */
+function getSignature(hashedMessage: Buffer, privateKey: Buffer): {
+  r: Buffer;
+  s: Buffer;
+  v: number;
+} {
+  return EthUtil.ecsign(hashedMessage, privateKey);
 }
 
-// 署名とメッセージから署名者アドレスを検証する関数
-function getVerifiedSigner(
+/**
+ * 署名を検証し、署名者アドレスが正しいか判定する
+ */
+function verifySignature(
   hashedMessage: Buffer,
-  createdSignature: { r: Buffer; s: Buffer; v: number },
-  signedAccountAddress: string
-) {
-  // 作成された署名から公開鍵を導出
+  signature: { r: Buffer; s: Buffer; v: number },
+  expectedAddress: string
+): boolean {
   const publicKey = EthUtil.ecrecover(
     hashedMessage,
-    createdSignature.v,
-    EthUtil.toBuffer(createdSignature.r),
-    EthUtil.toBuffer(createdSignature.s)
+    signature.v,
+    EthUtil.toBuffer(signature.r),
+    EthUtil.toBuffer(signature.s)
   );
 
-  // 公開鍵から署名者のアドレスを導出
-  const signerAccountAddress = EthUtil.bufferToHex(EthUtil.pubToAddress(publicKey));
+  const recoveredAddress = EthUtil.bufferToHex(EthUtil.pubToAddress(publicKey));
+  console.log(`🔍 Recovered Address: ${recoveredAddress}`);
 
-  // 導出したアドレスと署名時のアドレスを比較して真偽値を返す
-  return (
-    EthUtil.toChecksumAddress(signerAccountAddress) ===
-    EthUtil.toChecksumAddress(signedAccountAddress)
-  );
+  return EthUtil.toChecksumAddress(recoveredAddress) === EthUtil.toChecksumAddress(expectedAddress);
 }
 
-// 署名を作成する
-const CREATED_SIGNATURE = getSignature(HASHED_MESSAGE, HASHED_PRIVATE_KEY);
-console.log('Created Signature:', {
-  r: CREATED_SIGNATURE.r.toString('hex'),
-  s: CREATED_SIGNATURE.s.toString('hex'),
-  v: CREATED_SIGNATURE.v,
-});
 
-// 署名を検証する
-const isVerified = getVerifiedSigner(
-  HASHED_MESSAGE,
-  CREATED_SIGNATURE,
-  SIGNED_ACCOUNT_ADDRESS_ON_ETHEREUM
-);
-console.log(`Signature verification result: ${isVerified ? 'Success' : 'Failure'}`);
+/**
+ * 1. 環境変数を読み込み
+ * 2. メッセージを作成し、ハッシュ化する
+ * 3. 秘密鍵で署名を作成する
+ * 4. 公開鍵で署名を検証する
+ */
+try {
+  const { address, privateKey } = loadEnv();
+  const hashedMessage = createHashedMessage(address);
+
+  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+  if (!EthUtil.isValidPrivate(privateKeyBuffer)) {
+    throw new Error('❌ 無効な秘密鍵です。');
+  }
+
+  const signature = getSignature(hashedMessage, privateKeyBuffer);
+  console.log(`✍️ Created Signature:`, {
+    r: signature.r.toString('hex'),
+    s: signature.s.toString('hex'),
+    v: signature.v,
+  });
+
+  const isVerified = verifySignature(hashedMessage, signature, address);
+  console.log(`✅ Signature verification result: ${isVerified ? 'Success' : 'Failure'}`);
+} catch (error) {
+  console.error('⚠️ Error:', error);
+}

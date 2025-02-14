@@ -1,48 +1,100 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var EthUtil = require("ethereumjs-util");
-var dotenv = require("dotenv");
-dotenv.config();
-// 環境変数の読み込み
-var SIGNED_ACCOUNT_ADDRESS_ON_ETHEREUM = process.env.SIGNED_ACOUNT_ADDRESS_ON_ETHERIUM;
-var PRIVATE_KEY = process.env.PRIVATE_KEY;
-if (!SIGNED_ACCOUNT_ADDRESS_ON_ETHEREUM || !PRIVATE_KEY) {
-    throw new Error('環境変数が設定されていません。');
-}
-// メッセージを作成
-var timestamp = Date.now();
-var MESSAGE = "\u3088\u3046\u3053\u305D!\nAddress: ".concat(SIGNED_ACCOUNT_ADDRESS_ON_ETHEREUM, "\ntimestamp: ").concat(timestamp);
-console.log('Original Message:', MESSAGE);
-// メッセージのハッシュ化
-var HASHED_MESSAGE = EthUtil.keccak(Buffer.from(MESSAGE, 'utf-8'));
-console.log('Hashed Message:', HASHED_MESSAGE.toString('hex'));
-// 秘密鍵をBuffer形式に変換
-var HASHED_PRIVATE_KEY = Buffer.from(PRIVATE_KEY, 'hex');
-if (!EthUtil.isValidPrivate(HASHED_PRIVATE_KEY)) {
-    throw new Error('無効な秘密鍵です。');
-}
-// メッセージと秘密鍵から署名を作成する関数
-function getSignature(hashedMessage, privateKey) {
-    var createdSignature = EthUtil.ecsign(hashedMessage, privateKey);
-    return createdSignature;
-}
-// 署名とメッセージから署名者アドレスを検証する関数
-function getVerifiedSigner(hashedMessage, createdSignature, signedAccountAddress) {
-    // 作成された署名から公開鍵を導出
-    var publicKey = EthUtil.ecrecover(hashedMessage, createdSignature.v, EthUtil.toBuffer(createdSignature.r), EthUtil.toBuffer(createdSignature.s));
-    // 公開鍵から署名者のアドレスを導出
-    var signerAccountAddress = EthUtil.bufferToHex(EthUtil.pubToAddress(publicKey));
-    // 導出したアドレスと署名時のアドレスを比較して真偽値を返す
-    return (EthUtil.toChecksumAddress(signerAccountAddress) ===
-        EthUtil.toChecksumAddress(signedAccountAddress));
-}
-// 署名を作成する
-var CREATED_SIGNATURE = getSignature(HASHED_MESSAGE, HASHED_PRIVATE_KEY);
-console.log('Created Signature:', {
-    r: CREATED_SIGNATURE.r.toString('hex'),
-    s: CREATED_SIGNATURE.s.toString('hex'),
-    v: CREATED_SIGNATURE.v,
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
 });
-// 署名を検証する
-var isVerified = getVerifiedSigner(HASHED_MESSAGE, CREATED_SIGNATURE, SIGNED_ACCOUNT_ADDRESS_ON_ETHEREUM);
-console.log("Signature verification result: ".concat(isVerified ? 'Success' : 'Failure'));
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+const EthUtil = __importStar(require("ethereumjs-util"));
+const dotenv = __importStar(require("dotenv"));
+dotenv.config();
+/**
+ * 環境変数を読み込み、検証する
+ */
+function loadEnv() {
+    const address = process.env.SIGNED_ACOUNT_ADDRESS_ON_ETHERIUM;
+    const privateKey = process.env.PRIVATE_KEY;
+    if (!address || !privateKey) {
+        throw new Error('環境変数が正しく設定されていません。');
+    }
+    return { address, privateKey };
+}
+/**
+ * メッセージを作成し、ハッシュ化する
+ */
+function createHashedMessage(address) {
+    const timestamp = Date.now();
+    const message = `ようこそ!\nAddress: ${address}\ntimestamp: ${timestamp}`;
+    console.log(`📝 Original Message:\n${message}`);
+    const hashedMessage = EthUtil.keccak(Buffer.from(message, 'utf-8'));
+    console.log(`🔹 Hashed Message: ${hashedMessage.toString('hex')}`);
+    return hashedMessage;
+}
+/**
+ * 署名を作成する
+ */
+function getSignature(hashedMessage, privateKey) {
+    return EthUtil.ecsign(hashedMessage, privateKey);
+}
+/**
+ * 署名を検証し、署名者アドレスが正しいか判定する
+ */
+function verifySignature(hashedMessage, signature, expectedAddress) {
+    const publicKey = EthUtil.ecrecover(hashedMessage, signature.v, EthUtil.toBuffer(signature.r), EthUtil.toBuffer(signature.s));
+    const recoveredAddress = EthUtil.bufferToHex(EthUtil.pubToAddress(publicKey));
+    console.log(`🔍 Recovered Address: ${recoveredAddress}`);
+    return EthUtil.toChecksumAddress(recoveredAddress) === EthUtil.toChecksumAddress(expectedAddress);
+}
+/**
+ * 1. 環境変数を読み込み
+ * 2. メッセージを作成し、ハッシュ化する
+ * 3. 秘密鍵で署名を作成する
+ * 4. 公開鍵で署名を検証する
+ */
+try {
+    const { address, privateKey } = loadEnv();
+    const hashedMessage = createHashedMessage(address);
+    const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+    if (!EthUtil.isValidPrivate(privateKeyBuffer)) {
+        throw new Error('❌ 無効な秘密鍵です。');
+    }
+    const signature = getSignature(hashedMessage, privateKeyBuffer);
+    console.log(`✍️ Created Signature:`, {
+        r: signature.r.toString('hex'),
+        s: signature.s.toString('hex'),
+        v: signature.v,
+    });
+    const isVerified = verifySignature(hashedMessage, signature, address);
+    console.log(`✅ Signature verification result: ${isVerified ? 'Success' : 'Failure'}`);
+}
+catch (error) {
+    console.error('⚠️ Error:', error);
+}
