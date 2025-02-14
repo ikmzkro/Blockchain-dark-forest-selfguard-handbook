@@ -203,7 +203,9 @@ function verifySignature(hashedMessage, signature, expectedAddress) {
     // 署名から公開鍵を復元
     const publicKey = EthUtil.ecrecover(hashedMessage, signature.v, EthUtil.toBuffer(signature.r), EthUtil.toBuffer(signature.s));
     console.log('publicKey:', publicKey);
+    // publicKey: <Buffer 62 f4 58 2d 69 7d ba 6e 74 8c a9 17 aa 2e 55 b3 57 94 47 f5 bd 00 23 a5 78 b4 e3 be 59 0d fa db e0 62 84 a2 64 95 d2 14 5d 41 2a 15 a1 3a d7 16 56 86 ... 14 more bytes>
     console.log('EthUtil.pubToAddress(publicKey):', EthUtil.pubToAddress(publicKey));
+    // EthUtil.pubToAddress(publicKey): <Buffer 6a 84 32 d3 21 27 3e 2b e8 a3 0a ef 08 39 15 cf db 7f 1b 85>
     // 公開鍵 (publicKey) からEthereumアドレス (address) を取得し、16進数文字列 (hex) 形式で出力する
     const recoveredAddress = EthUtil.bufferToHex(EthUtil.pubToAddress(publicKey));
     console.log(`🔍 Recovered Address: ${recoveredAddress}`);
