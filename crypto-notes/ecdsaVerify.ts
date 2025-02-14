@@ -25,8 +25,13 @@ function createHashedMessage(address: string): Buffer {
   const message = `ようこそ!\nAddress: ${address}\ntimestamp: ${timestamp}`;
   console.log(`📝 Original Message:\n${message}`);
 
+  // 文字列や数値をバイナリデータに変換して暗号学的処理に対応させる：　Buffer.from(message, 'utf-8')
+  // 同じデータなら同じハッシュ値が出るためKeccak-256ハッシュ化する：　EthUtil.keccak
   const hashedMessage = EthUtil.keccak(Buffer.from(message, 'utf-8'));
-  console.log(`🔹 Hashed Message: ${hashedMessage.toString('hex')}`);
+
+  console.log('Buffer形式のメッセージ:', Buffer.from(message, 'utf-8'));
+  console.log('Keccak-256ハッシュ: 256bitの文字列', hashedMessage);
+  console.log(`Hashed Message: 64文字の16進数で表示 ${hashedMessage.toString('hex')}`);
 
   return hashedMessage;
 }
