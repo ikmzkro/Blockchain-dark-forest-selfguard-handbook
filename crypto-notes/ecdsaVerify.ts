@@ -123,6 +123,8 @@ function createEIP712HashedMessage(address: string): Buffer {
   };
 
   const encodedMessage = JSON.stringify(data);
+  console.log('encodedMessage:', encodedMessage);
+  console.log('Buffer.from(encodedMessage):', Buffer.from(encodedMessage));
   return EthUtil.keccak(Buffer.from(encodedMessage));
 }
 
@@ -188,10 +190,10 @@ function validatePrivateKey(privateKeyHex: string): Buffer {
  * @example
  * ```typescript
  * const message = 'Hello Ethereum';
- * const hashedMessage = EthUtil.keccak(Buffer.from(message, 'utf-8'));
- * const privateKey = Buffer.from('7f5b6c...', 'hex');
+ * const hashedMessa= Buffer.from('7f5b6c...', 'hex');
  * const signature = getSignature(hashedMessage, privateKey);
- * console.log(signature);
+ * console.log(signage = EthUtil.keccak(Buffer.from(message, 'utf-8'));
+ * const privateKey ture);
  * ```
  */
 function getSignature(hashedMessage: Buffer, privateKey: Buffer): {
@@ -264,6 +266,7 @@ try {
   const { address, privateKeyHex } = loadEnv();
 
   const hashedMessage = createEIP712HashedMessage(address);
+  console.log('hashedMessage:', hashedMessage);
 
   const privateKeyBuffer = validatePrivateKey(privateKeyHex);
   console.log('🔑 有効な秘密鍵です:', privateKeyBuffer);
