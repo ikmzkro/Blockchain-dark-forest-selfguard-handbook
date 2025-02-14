@@ -124,7 +124,7 @@ function createEIP712HashedMessage(address) {
         name: 'Ethereum Signature',
         version: '1',
         chainId: 1,
-        verifyingContract: address
+        verifyingContract: 'verifyingContractAddress'
     };
     const message = {
         address,
@@ -148,8 +148,6 @@ function createEIP712HashedMessage(address) {
         message
     };
     const encodedMessage = JSON.stringify(data);
-    console.log('encodedMessage:', encodedMessage);
-    console.log('Buffer.from(encodedMessage):', Buffer.from(encodedMessage));
     return EthUtil.keccak(Buffer.from(encodedMessage));
 }
 /**

@@ -98,7 +98,7 @@ function createEIP712HashedMessage(address: string): Buffer {
     name: 'Ethereum Signature',
     version: '1',
     chainId: 1,
-    verifyingContract: address
+    verifyingContract: 'verifyingContractAddress'
   };
   const message = {
     address,
