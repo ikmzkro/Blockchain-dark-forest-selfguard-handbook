@@ -13,6 +13,7 @@ const bobPublicKey = bobECDH.getPublicKey();
 const bobPrivateKey = bobECDH.getPrivateKey();
 
 // 共通鍵の作成
+// computeSecret: 「自分の秘密鍵」と「相手の公開鍵」から共通の秘密鍵を計算する関数
 const aliceSharedKey = aliceECDH.computeSecret(bobPublicKey);
 const bobSharedKey = bobECDH.computeSecret(alicePublicKey);
 
