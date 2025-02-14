@@ -123,8 +123,6 @@ function createEIP712HashedMessage(address: string): Buffer {
   };
 
   const encodedMessage = JSON.stringify(data);
-  console.log('encodedMessage:', encodedMessage);
-  console.log('Buffer.from(encodedMessage):', Buffer.from(encodedMessage));
   return EthUtil.keccak(Buffer.from(encodedMessage));
 }
 
