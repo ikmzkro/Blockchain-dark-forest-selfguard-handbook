@@ -113,13 +113,41 @@ function validatePrivateKey(privateKeyHex: string): Buffer {
 }
 
 /**
- * 署名を作成する
+ * @function getSignature
+ * @description ECDSA署名を生成し、`r`, `s`, `v` の3つのパラメータで署名を返します。
+ *
+ * @param {Buffer} hashedMessage - Keccak-256でハッシュ化されたaddressを含むメッセージのバイナリデータ。  
+ * @param {Buffer} privateKey - Ethereum秘密鍵（256bit,32バイト）のバイナリデータ。  
+ *
+ * @returns {{ r: Buffer; s: Buffer; v: number }}  
+ * ECDSA署名結果として、`r`, `s`, `v` のパラメータを含むオブジェクトを返却します。  
+ *
+ * @throws {Error} - 秘密鍵が無効、またはハッシュメッセージが正しくない場合にエラーをスローします。  
+ *
+ * @details
+ * Ethereumの署名は、`secp256k1`楕円曲線暗号アルゴリズムを基に`ECDSA`署名を生成します。  
+ * 以下の3つの値が署名結果として生成されます：
+ * - **`r`**: 署名のx座標部分（32バイト）  
+ * - **`s`**: 署名のy座標部分（32バイト）  
+ * - **`v`**: リカバリパラメータ（27または28）  
+ *
+ * 署名時には、メッセージが `keccak256` でハッシュ化されている必要があります。  
+ *
+ * @example
+ * ```typescript
+ * const message = 'Hello Ethereum';
+ * const hashedMessage = EthUtil.keccak(Buffer.from(message, 'utf-8'));
+ * const privateKey = Buffer.from('7f5b6c...', 'hex');
+ * const signature = getSignature(hashedMessage, privateKey);
+ * console.log(signature);
+ * ```
  */
 function getSignature(hashedMessage: Buffer, privateKey: Buffer): {
   r: Buffer;
   s: Buffer;
   v: number;
 } {
+  // ECDSA署名を生成
   return EthUtil.ecsign(hashedMessage, privateKey);
 }
 
@@ -146,13 +174,11 @@ function verifySignature(
 
 
 /**
- * 1. 環境変数を読み込み
- * 2. メッセージを作成し、ハッシュ化する
- * 3. 秘密鍵で署名を作成する
- * 4. 公開鍵で署名を検証する
+ * 
  */
 try {
   const { address, privateKeyHex } = loadEnv();
+
   const hashedMessage = createHashedMessage(address);
 
   const privateKeyBuffer = validatePrivateKey(privateKeyHex);
