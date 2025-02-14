@@ -1,4 +1,3 @@
 ```
-tsc ecdsaVerify.ts
-node ecdsaVerify.js
+tsc && node ecdsaVerify.js
 ```
