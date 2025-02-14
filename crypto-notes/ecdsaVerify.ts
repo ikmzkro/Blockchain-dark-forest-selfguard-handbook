@@ -129,7 +129,9 @@ function validatePrivateKey(privateKeyHex: string): Buffer {
  * 以下の3つの値が署名結果として生成されます：
  * - **`r`**: 署名のx座標部分（32バイト）  
  * - **`s`**: 署名のy座標部分（32バイト）  
- * - **`v`**: リカバリパラメータ（27または28）  
+ * - **`v`**: 署名者の公開鍵を復元するために使用されるリカバリパラメータ（27または28）  
+ * 27 → 公開鍵の偶数Y座標
+ * 28 → 公開鍵の奇数Y座標
  *
  * 署名時には、メッセージが `keccak256` でハッシュ化されている必要があります。  
  *
@@ -152,26 +154,58 @@ function getSignature(hashedMessage: Buffer, privateKey: Buffer): {
 }
 
 /**
- * 署名を検証し、署名者アドレスが正しいか判定する
+ * @function verifySignature
+ * @description Keccak-256ハッシュ化されたメッセージとECDSA署名を使って、署名者アドレスが期待通りかを検証します。
+ *
+ * @param {Buffer} hashedMessage - Keccak-256でハッシュ化されたメッセージのバイナリデータ。  
+ * @param {{ r: Buffer; s: Buffer; v: number }} signature - ECDSA署名（`r`, `s`, `v`）。  
+ * @param {string} expectedAddress - 検証対象となるEthereumアドレス（チェックサム形式が推奨）。  
+ *
+ * @returns {boolean}  
+ * 署名が有効で、署名者アドレスが`expectedAddress`と一致する場合は`true`を返します。  
+ *
+ * @throws {Error} - 入力データが不正、または公開鍵の復元に失敗した場合にエラーをスローします。  
+ *
+ * @details
+ * この関数は、`EthUtil.ecrecover()`を用いて署名から公開鍵を復元し、  
+ * `EthUtil.pubToAddress()`でアドレスを導出して検証を行います。  
+ * - `secp256k1`楕円曲線暗号アルゴリズムを使用  
+ * - ハッシュは`keccak256`で計算されている必要があります  
+ * - `v`値は27または28を指定する必要があります  
+ *
+ * @example
+ * ```typescript
+ * const hashedMessage = EthUtil.keccak(Buffer.from('Hello Ethereum', 'utf-8'));
+ * const signature = { r: rBuffer, s: sBuffer, v: 28 };
+ * const address = '0xabc123...';
+ * const isValid = verifySignature(hashedMessage, signature, address);
+ * console.log(isValid); // true or false
+ * ```
  */
 function verifySignature(
   hashedMessage: Buffer,
   signature: { r: Buffer; s: Buffer; v: number },
   expectedAddress: string
 ): boolean {
+  // 署名から公開鍵を復元
   const publicKey = EthUtil.ecrecover(
     hashedMessage,
     signature.v,
     EthUtil.toBuffer(signature.r),
     EthUtil.toBuffer(signature.s)
   );
+  console.log('publicKey:', publicKey);
+  // publicKey: <Buffer 62 f4 58 2d 69 7d ba 6e 74 8c a9 17 aa 2e 55 b3 57 94 47 f5 bd 00 23 a5 78 b4 e3 be 59 0d fa db e0 62 84 a2 64 95 d2 14 5d 41 2a 15 a1 3a d7 16 56 86 ... 14 more bytes>
+  console.log('EthUtil.pubToAddress(publicKey):', EthUtil.pubToAddress(publicKey));
+  // EthUtil.pubToAddress(publicKey): <Buffer 6a 84 32 d3 21 27 3e 2b e8 a3 0a ef 08 39 15 cf db 7f 1b 85>
 
+  // 公開鍵 (publicKey) からEthereumアドレス (address) を取得し、16進数文字列 (hex) 形式で出力する
   const recoveredAddress = EthUtil.bufferToHex(EthUtil.pubToAddress(publicKey));
   console.log(`🔍 Recovered Address: ${recoveredAddress}`);
 
+  // アドレスを比較（チェックサム形式で比較）
   return EthUtil.toChecksumAddress(recoveredAddress) === EthUtil.toChecksumAddress(expectedAddress);
 }
-
 
 /**
  * 
