@@ -60,6 +60,7 @@ const removeCharacterFromStart = (str, charToRemove) => {
 };
 /**
  * Class representing an HD Wallet Service for Ethereum.
+ * https://iancoleman.io/bip39/
  */
 class HdWalletService {
     /**
@@ -82,7 +83,7 @@ class HdWalletService {
     getMnemonic(filename = 'mnemonic.txt') {
         let mnemonic;
         try {
-            mnemonic = fs.readFileSync(path.join(process.cwd(), '../secrets', filename), 'utf-8').trimEnd();
+            mnemonic = fs.readFileSync(path.join(process.cwd(), '/secrets', filename), 'utf-8').trimEnd();
         }
         catch (error) {
             console.error('Error reading mnemonic file:', error);
@@ -152,15 +153,6 @@ class HdWalletService {
     }
 }
 exports.HdWalletService = HdWalletService;
-/** Configuration for Electrum server connection. */
-HdWalletService.electrs = {
-    scheme: 'http',
-    domain: 'host.docker.internal',
-    port: {
-        mainnet: '4000',
-        testnet: '4001',
-    },
-};
 // Example usage
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const walletService = new HdWalletService();
