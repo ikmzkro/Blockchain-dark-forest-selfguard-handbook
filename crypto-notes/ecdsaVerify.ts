@@ -54,7 +54,7 @@ function loadEnv(): { address: string; privateKeyHex: string } {
  *
  * @example
  * ```typescript
- * const hashed = createHashedMessage('0xabc123...');
+ * const hashedMessage = createHashedMessage(address);
  * console.log(hashed.toString('hex')); // 16進数で表示されるKeccak-256ハッシュ
  * ```
  */
@@ -76,6 +76,55 @@ function createHashedMessage(address: string): Buffer {
   return hashedMessage;
 }
 
+/**
+ * @function createEIP712HashedMessage
+ * @description EIP-712仕様に基づいたメッセージを作成し、ハッシュ化します。
+ *
+ * @param {string} address - メッセージに含めるEthereumアドレス。
+ *
+ * @returns {Buffer} - EIP-712に従ってハッシュ化されたメッセージ。
+ *
+ * @details
+ * この関数はEIP-712に基づき、構造化データに署名するためのメッセージを作成します。
+ * ドメインオブジェクト、型定義、メッセージ内容を含むJSONオブジェクトを生成し、
+ * それをKeccak256ハッシュ関数でハッシュ化します。
+ *
+ * @example
+ * const hashedMessage = createEIP712HashedMessage('0xabc123...');
+ * console.log(hashedMessage.toString('hex'));
+ */
+function createEIP712HashedMessage(address: string): Buffer {
+  const domain = {
+    name: 'Ethereum Signature',
+    version: '1',
+    chainId: 1,
+    verifyingContract: address
+  };
+  const message = {
+    address,
+    timestamp: Date.now()
+  };
+  const data = {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' }
+      ],
+      Message: [
+        { name: 'address', type: 'address' },
+        { name: 'timestamp', type: 'uint256' }
+      ]
+    },
+    domain,
+    primaryType: 'Message',
+    message
+  };
+
+  const encodedMessage = JSON.stringify(data);
+  return EthUtil.keccak(Buffer.from(encodedMessage));
+}
 
 /**
  * @function validatePrivateKey
@@ -214,7 +263,7 @@ function verifySignature(
 try {
   const { address, privateKeyHex } = loadEnv();
 
-  const hashedMessage = createHashedMessage(address);
+  const hashedMessage = createEIP712HashedMessage(address);
 
   const privateKeyBuffer = validatePrivateKey(privateKeyHex);
   console.log('🔑 有効な秘密鍵です:', privateKeyBuffer);
