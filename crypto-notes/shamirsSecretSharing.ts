@@ -8,10 +8,6 @@ export class ShamirSecret {
   private secret?: Buffer;
   private coefficients?: Buffer[];
 
-  // f(x)=a_0+a_1*x+a_2*x^2+...+a_k−1*x^k−1
-  // a_0 = 秘密情報 (secret)
-  // a_1, a_2, ... は乱数で決定される係数 (Coefficients)
-  // 閾値 (threshold) = 多項式の次数 + 1
   constructor(threshold: number, secret?: string) {
     this.threshold = threshold;
     if (secret) {
@@ -109,9 +105,14 @@ export function divideBuffers(a: Buffer, b: Buffer): Buffer {
   return result;
 }
 
-// Example Usage:
-const shamirsecret = new ShamirSecret(2, "In the name of Adi Shamir");
+// シャミアの秘密分散法では多項式を用いる。
+// f(x)=a_0+a_1*x+a_2*x^2+...+a_k−1*x^k−1
+// a_0 = 秘密情報 (secret)
+// a_1, a_2, ... は乱数で決定される係数 (coefficients)
+// 閾値 (threshold) = 多項式の次数 + 1
+const shamirsecret = new ShamirSecret(3, "In the name of Adi Shamir");
 console.log('shamirsecret:', shamirsecret);
+
 const s1 = shamirsecret.computeShare(1);
 const s2 = shamirsecret.computeShare(2);
 const s3 = shamirsecret.computeShare(3);
