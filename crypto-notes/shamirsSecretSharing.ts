@@ -33,26 +33,26 @@ export class ShamirSecret {
   public computeShare(shareNumber: number): Buffer {
     if (!this.coefficients) throw new Error('Coefficients not generated');
 
-    // 1️⃣ 初期化: 多項式の和 (y) を 0 で初期化
+    // 1️. 初期化: 多項式の和 (y) を 0 で初期化
     let share = Buffer.alloc(this.secret!.length);
     console.log('Initial share (y):', share);
 
-    // 2️⃣ シェア番号 (x 座標)
+    // 2️. シェア番号 (x 座標)
     const x = Buffer.from([shareNumber]);
     console.log('Share number (x):', x);
 
-    // 3️⃣ 多項式 f(x) を計算
+    // 3️. 多項式 f(x) を計算
     for (let j = 0; j < this.threshold; j++) {
       // 各項 a_j * x^j を計算
       const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j));
-      console.log(`Term ${j} (a_j * x^j):`, term);
+      console.log(`Term ${j} (a_${j} * x^${j}):`, term);
 
       // XOR で多項式の和を加算 (XOR はバイト単位の加算)
       share = xorBuffers(share, term);
       console.log(`Accumulated share after term ${j}:`, share);
     }
 
-    // 4️⃣ シェアとして (x, f(x)) を返す
+    // 4️. シェアとして (x, y=f(x)) を返す
     return Buffer.concat([x, share]);
   }
   
