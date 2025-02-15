@@ -26,11 +26,15 @@ export class ShamirSecret {
   public computeShare(shareNumber: number): Buffer {
     if (!this.coefficients) throw new Error('Coefficients not generated');
     let share = Buffer.alloc(this.secret!.length);
+    console.log('share:', share);
     const x = Buffer.from([shareNumber]);
+    console.log('x:', x);
 
     for (let j = 0; j < this.threshold; j++) {
-      const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j));
-      share = xorBuffers(share, term);
+      const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j)); // a_j * x^j
+      console.log('term:', term);
+      share = xorBuffers(share, term); // シェア値に加算 (XORで多項式を表現)
+      console.log('share:', share);
     }
     return Buffer.concat([x, share]);
   }
@@ -113,11 +117,15 @@ export function divideBuffers(a: Buffer, b: Buffer): Buffer {
 const shamirsecret = new ShamirSecret(3, "In the name of Adi Shamir");
 console.log('shamirsecret:', shamirsecret);
 
+// Shamirの秘密分散法は多項式補間（ラグランジュ補間）に基づいている
+// x 座標として「シェア番号」を使います。
+// y 座標として「シェアの値」を計算します。
 const s1 = shamirsecret.computeShare(1);
-const s2 = shamirsecret.computeShare(2);
-const s3 = shamirsecret.computeShare(3);
+console.log('s1:', s1);
+// const s2 = shamirsecret.computeShare(2);
+// const s3 = shamirsecret.computeShare(3);
 
 // Simulate discarding original secret
-const shamirRecover = new ShamirSecret(2);
-const recovered = shamirRecover.recoverSecret([s1, s3]);
-console.log('Recovered Secret:', recovered);
+// const shamirRecover = new ShamirSecret(2);
+// const recovered = shamirRecover.recoverSecret([s1, s3]);
+// console.log('Recovered Secret:', recovered);
