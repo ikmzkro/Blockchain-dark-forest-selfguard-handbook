@@ -14,4 +14,5 @@ https://tech.andgo.co.jp/entry/2024/05/25/140838
 
 # SSS
 https://kimh.github.io/blog/jp/security/protect-your-secret-key-with-shamirs-secret-sharing-jp/
+https://github.com/fireblocks/mpc-lib/blob/main/src/common/crypto/shamir_secret_sharing/verifiable_secret_sharing.c
 ```
