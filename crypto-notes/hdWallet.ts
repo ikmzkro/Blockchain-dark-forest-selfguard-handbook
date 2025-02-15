@@ -83,6 +83,7 @@ export class HdWalletService {
   private getEthHdNode(mnemonic: string): ethers.HDNodeWallet {
     try {
       const seed = bip39.mnemonicToSeedSync(mnemonic);
+      console.log('seed:', seed);
       // Derives the HD node using the Ethereum BIP-44 derivation path.
       return ethers.HDNodeWallet.fromSeed(seed).derivePath(`m/44'/60'/0'/0/0`);
     } catch (error) {
