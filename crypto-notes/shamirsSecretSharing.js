@@ -135,6 +135,7 @@ function divideBuffers(a, b) {
 }
 // Example Usage:
 const shamirsecret = new ShamirSecret(2, "In the name of Adi Shamir");
+console.log('shamirsecret:', shamirsecret);
 const s1 = shamirsecret.computeShare(1);
 const s2 = shamirsecret.computeShare(2);
 const s3 = shamirsecret.computeShare(3);
