@@ -34,8 +34,14 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ShamirSecret = void 0;
+exports.multiplyBuffers = multiplyBuffers;
+exports.bufferExp = bufferExp;
+exports.xorBuffers = xorBuffers;
+exports.recoverSecret = recoverSecret;
+exports.bufferSub = bufferSub;
+exports.divideBuffers = divideBuffers;
 /**
- * Shamir's Secret Sharing implementation with a class-based structure.
+ * Shamir's Secret Sharing implementation (TypeScript version inspired by Ruby code).
  */
 const crypto = __importStar(require("crypto"));
 class ShamirSecret {
@@ -58,80 +64,81 @@ class ShamirSecret {
         let share = Buffer.alloc(this.secret.length);
         const x = Buffer.from([shareNumber]);
         for (let j = 0; j < this.threshold; j++) {
-            const term = this.multiplyBuffers(this.coefficients[j], this.bufferExp(x, j));
-            share = this.xorBuffers(share, term);
+            const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j));
+            share = xorBuffers(share, term);
         }
         return Buffer.concat([x, share]);
     }
-    multiplyBuffers(a, b) {
-        var _a;
-        const result = Buffer.alloc(a.length);
-        for (let i = 0; i < a.length; i++) {
-            result[i] = a[i] * ((_a = b[i]) !== null && _a !== void 0 ? _a : 1);
-        }
-        return result;
-    }
-    bufferExp(buffer, exponent) {
-        let result = Buffer.from([1]);
-        for (let i = 0; i < exponent; i++) {
-            result = this.multiplyBuffers(result, buffer);
-        }
-        return result;
-    }
-    xorBuffers(a, b) {
-        const length = Math.min(a.length, b.length);
-        const result = Buffer.alloc(length);
-        for (let i = 0; i < length; i++) {
-            result[i] = a[i] ^ b[i];
-        }
-        return result;
-    }
     recoverSecret(shares) {
-        const threshold = shares.length;
-        const secretLength = shares[0].length - 1;
-        let secret = Buffer.alloc(secretLength);
-        for (let i = 0; i < threshold; i++) {
-            const xi = shares[i].slice(0, 1);
-            const yi = shares[i].slice(1);
-            let li = Buffer.from([1]);
-            for (let j = 0; j < threshold; j++) {
-                if (i !== j) {
-                    const xj = shares[j].slice(0, 1);
-                    const numerator = this.bufferSub(xj, Buffer.from([0]));
-                    const denominator = this.bufferSub(xj, xi);
-                    li = this.multiplyBuffers(li, this.divideBuffers(numerator, denominator));
-                }
-            }
-            secret = this.xorBuffers(secret, this.multiplyBuffers(li, yi));
-        }
-        return secret;
-    }
-    bufferSub(a, b) {
-        var _a;
-        const result = Buffer.alloc(a.length);
-        for (let i = 0; i < a.length; i++) {
-            result[i] = a[i] - ((_a = b[i]) !== null && _a !== void 0 ? _a : 0);
-        }
-        return result;
-    }
-    divideBuffers(a, b) {
-        const result = Buffer.alloc(a.length);
-        for (let i = 0; i < a.length; i++) {
-            result[i] = b[i] !== 0 ? Math.floor(a[i] / b[i]) : 0;
-        }
-        return result;
+        const recovered = recoverSecret(shares);
+        return recovered.toString();
     }
 }
 exports.ShamirSecret = ShamirSecret;
-// Example usage:
-const shamir = new ShamirSecret(2, 'In the name of Adi Shamir');
-console.log('shamir:', shamir);
-const s1 = shamir.computeShare(1);
-const s2 = shamir.computeShare(2);
-const s3 = shamir.computeShare(3);
-console.log('s1:', s1);
-console.log('s2:', s2);
-console.log('s3:', s3);
+function multiplyBuffers(a, b) {
+    var _a;
+    const result = Buffer.alloc(a.length);
+    for (let i = 0; i < a.length; i++) {
+        result[i] = a[i] * ((_a = b[i]) !== null && _a !== void 0 ? _a : 1);
+    }
+    return result;
+}
+function bufferExp(buffer, exponent) {
+    let result = Buffer.from([1]);
+    for (let i = 0; i < exponent; i++) {
+        result = multiplyBuffers(result, buffer);
+    }
+    return result;
+}
+function xorBuffers(a, b) {
+    const length = Math.min(a.length, b.length);
+    const result = Buffer.alloc(length);
+    for (let i = 0; i < length; i++) {
+        result[i] = a[i] ^ b[i];
+    }
+    return result;
+}
+function recoverSecret(shares) {
+    const threshold = shares.length;
+    const secretLength = shares[0].length - 1;
+    let secret = Buffer.alloc(secretLength);
+    for (let i = 0; i < threshold; i++) {
+        const xi = shares[i].slice(0, 1);
+        const yi = shares[i].slice(1);
+        let li = Buffer.from([1]);
+        for (let j = 0; j < threshold; j++) {
+            if (i !== j) {
+                const xj = shares[j].slice(0, 1);
+                const numerator = bufferSub(xj, Buffer.from([0]));
+                const denominator = bufferSub(xj, xi);
+                li = multiplyBuffers(li, divideBuffers(numerator, denominator));
+            }
+        }
+        secret = xorBuffers(secret, multiplyBuffers(li, yi));
+    }
+    return secret;
+}
+function bufferSub(a, b) {
+    var _a;
+    const result = Buffer.alloc(a.length);
+    for (let i = 0; i < a.length; i++) {
+        result[i] = a[i] - ((_a = b[i]) !== null && _a !== void 0 ? _a : 0);
+    }
+    return result;
+}
+function divideBuffers(a, b) {
+    const result = Buffer.alloc(a.length);
+    for (let i = 0; i < a.length; i++) {
+        result[i] = b[i] !== 0 ? Math.floor(a[i] / b[i]) : 0;
+    }
+    return result;
+}
+// Example Usage:
+const shamirsecret = new ShamirSecret(2, "In the name of Adi Shamir");
+const s1 = shamirsecret.computeShare(1);
+const s2 = shamirsecret.computeShare(2);
+const s3 = shamirsecret.computeShare(3);
+// Simulate discarding original secret
 const shamirRecover = new ShamirSecret(2);
 const recovered = shamirRecover.recoverSecret([s1, s3]);
 console.log('Recovered Secret:', recovered);
