@@ -58,19 +58,32 @@ class ShamirSecret {
             this.coefficients.push(crypto.randomBytes(this.secret.length)); // a1, a2, ... = ランダムな係数
         }
     }
+    /**
+     * Computes a share for a given share number (x-coordinate).
+     * This simulates calculating f(x) for the polynomial constructed from coefficients.
+     *
+     * @param shareNumber - The x-coordinate (share number).
+     * @returns Buffer containing the share (x and f(x)).
+     */
     computeShare(shareNumber) {
         if (!this.coefficients)
             throw new Error('Coefficients not generated');
+        // 1️⃣ 初期化: 多項式の和 (y) を 0 で初期化
         let share = Buffer.alloc(this.secret.length);
-        console.log('share:', share);
+        console.log('Initial share (y):', share);
+        // 2️⃣ シェア番号 (x 座標)
         const x = Buffer.from([shareNumber]);
-        console.log('x:', x);
+        console.log('Share number (x):', x);
+        // 3️⃣ 多項式 f(x) を計算
         for (let j = 0; j < this.threshold; j++) {
-            const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j)); // a_j * x^j
-            console.log('term:', term);
-            share = xorBuffers(share, term); // シェア値に加算 (XORで多項式を表現)
-            console.log('share:', share);
+            // 各項 a_j * x^j を計算
+            const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j));
+            console.log(`Term ${j} (a_j * x^j):`, term);
+            // XOR で多項式の和を加算 (XOR はバイト単位の加算)
+            share = xorBuffers(share, term);
+            console.log(`Accumulated share after term ${j}:`, share);
         }
+        // 4️⃣ シェアとして (x, f(x)) を返す
         return Buffer.concat([x, share]);
     }
     recoverSecret(shares) {
@@ -79,6 +92,12 @@ class ShamirSecret {
     }
 }
 exports.ShamirSecret = ShamirSecret;
+/**
+ * Multiplies two buffers element-wise (byte-by-byte).
+ * @param a - First buffer (e.g., coefficient).
+ * @param b - Second buffer (e.g., x^j).
+ * @returns Resulting buffer from multiplication.
+ */
 function multiplyBuffers(a, b) {
     var _a;
     const result = Buffer.alloc(a.length);
@@ -87,18 +106,32 @@ function multiplyBuffers(a, b) {
     }
     return result;
 }
+/**
+ * Computes the power of a buffer (x^exponent).
+ *
+ * @param buffer - The buffer representing x.
+ * @param exponent - The exponent.
+ * @returns Buffer representing x^exponent.
+ */
 function bufferExp(buffer, exponent) {
-    let result = Buffer.from([1]);
+    let result = Buffer.from([1]); // x^0 = 1
     for (let i = 0; i < exponent; i++) {
         result = multiplyBuffers(result, buffer);
     }
     return result;
 }
+/**
+ * Performs XOR operation between two buffers.
+ *
+ * @param a - First buffer.
+ * @param b - Second buffer.
+ * @returns XOR result buffer.
+ */
 function xorBuffers(a, b) {
     const length = Math.min(a.length, b.length);
     const result = Buffer.alloc(length);
     for (let i = 0; i < length; i++) {
-        result[i] = a[i] ^ b[i];
+        result[i] = a[i] ^ b[i]; // XOR演算で多項式の項を加算
     }
     return result;
 }
