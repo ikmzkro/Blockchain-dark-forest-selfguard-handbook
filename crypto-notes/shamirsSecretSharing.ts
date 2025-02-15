@@ -103,11 +103,15 @@ export class ShamirSecret {
 
 // Example usage:
 const shamir = new ShamirSecret(2, 'In the name of Adi Shamir');
+console.log('shamir:', shamir);
 const s1 = shamir.computeShare(1);
 const s2 = shamir.computeShare(2);
 const s3 = shamir.computeShare(3);
+console.log('s1:', s1);
+console.log('s2:', s2);
+console.log('s3:', s3);
 
 // Simulate discarding original secret
-const shamirRecover = new ShamirSecret(2);
-const recovered = shamirRecover.recoverSecret([s1, s3]);
-console.log('Recovered Secret:', recovered);
+// const shamirRecover = new ShamirSecret(2);
+// const recovered = shamirRecover.recoverSecret([s1, s3]);
+// console.log('Recovered Secret:', recovered);
