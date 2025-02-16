@@ -11,11 +11,11 @@ PRIVATE_KEY=
 
 # Commands
 ```
-tsc && node ecdsaVerify.js
-tsc && node ecdh.js
-tsc && node ethereumAddressGenerator.js
-tsc && node hdWallet.js
-tsc && node shamirsSecretSharing.js
+tsc && node ecdsa/ecdsaVerify.js
+tsc && node ecdh/ecdh.js
+tsc && node ethereum/ethereumAddressGenerator.js
+tsc && node ethereum/hdWallet.js
+tsc && node sss/shamirsSecretSharing.js
 ```
 
 # Refs
