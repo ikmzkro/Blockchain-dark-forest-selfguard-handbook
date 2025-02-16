@@ -175,7 +175,7 @@ function divideBuffers(a, b) {
 // a_0 = 秘密情報 (secret)
 // a_1, a_2, ... は乱数で決定される係数 (coefficients)
 // 閾値 (threshold) = 多項式の次数 + 1
-const shamirsecret = new ShamirSecret(3, "In the name of Adi Shamir");
+const shamirsecret = new ShamirSecret(2, "In the name of Adi Shamir");
 console.log('shamirsecret:', shamirsecret);
 // Shamirの秘密分散法は多項式補間（ラグランジュ補間）に基づいている
 // x 座標として「シェア番号」を使います。

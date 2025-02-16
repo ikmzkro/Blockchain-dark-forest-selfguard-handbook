@@ -37,19 +37,19 @@ export class ShamirSecret {
     let share = Buffer.alloc(this.secret!.length);
     console.log('Initial share (y):', share);
 
-    // 2️. シェア番号 (x 座標)
-    const x = Buffer.from([shareNumber]);
+    // 2️. シェア番号 (x 座標) をバッファに変換
+    const x = Buffer.from([shareNumber]); // shareNumberをバッファに変換してx座標を作成
     console.log('Share number (x):', x);
 
     // 3️. 多項式 f(x) を計算
     for (let j = 0; j < this.threshold; j++) {
       // 各項 a_j * x^j を計算
-      const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j));
+      const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j)); // j番目の係数とxのj乗を掛け算
       console.log(`Term ${j} (a_${j} * x^${j}):`, term);
 
       // XOR で多項式の和を加算 (XOR はバイト単位の加算)
-      share = xorBuffers(share, term);
-      console.log(`Accumulated share after term ${j}:`, share);
+      share = xorBuffers(share, term); // 現在のシェアに新しい項を加算
+      console.log(`Accumulated share after term ${j}:`, share); // 現在のシェアの状態を表示
     }
 
     // 4️. シェアとして (x, y=f(x)) を返す
@@ -152,7 +152,7 @@ export function divideBuffers(a: Buffer, b: Buffer): Buffer {
 // a_0 = 秘密情報 (secret)
 // a_1, a_2, ... は乱数で決定される係数 (coefficients)
 // 閾値 (threshold) = 多項式の次数 + 1
-const shamirsecret = new ShamirSecret(3, "In the name of Adi Shamir");
+const shamirsecret = new ShamirSecret(2, "In the name of Adi Shamir");
 console.log('shamirsecret:', shamirsecret);
 
 // Shamirの秘密分散法は多項式補間（ラグランジュ補間）に基づいている
