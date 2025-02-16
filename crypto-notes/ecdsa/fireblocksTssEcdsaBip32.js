@@ -1,0 +1,2 @@
+"use strict";
+// https://tech.andgo.co.jp/entry/2024/05/25/140838
