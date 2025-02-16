@@ -1,3 +1,14 @@
+# Install
+```
+npm i
+```
+
+# Env
+```
+SIGNED_ACOUNT_ADDRESS_ON_ETHERIUM=
+PRIVATE_KEY=
+```
+
 # Commands
 ```
 tsc && node ecdsaVerify.js
