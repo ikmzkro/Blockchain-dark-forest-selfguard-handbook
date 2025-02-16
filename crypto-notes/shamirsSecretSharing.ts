@@ -43,7 +43,7 @@ export class ShamirSecret {
 
     // 3️. 多項式 f(x) を計算
     for (let j = 0; j < this.threshold; j++) {
-      // 各項 a_j * x^j を計算
+      // 多項式の各項(term) = a_j * x^j を計算
       const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j)); // j番目の係数とxのj乗を掛け算
       console.log(`Term ${j} (a_${j} * x^${j}):`, term);
 
@@ -99,6 +99,7 @@ export class ShamirSecret {
    * @returns XOR result buffer.
    */
   export function xorBuffers(a: Buffer, b: Buffer): Buffer {
+    // 配列の範囲外にアクセスすることを防ぎ、エラーを回避する
     const length = Math.min(a.length, b.length);
     const result = Buffer.alloc(length);
     for (let i = 0; i < length; i++) {
