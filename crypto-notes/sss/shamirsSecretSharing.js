@@ -87,8 +87,32 @@ class ShamirSecret {
         return Buffer.concat([x, share]);
     }
     recoverSecret(shares) {
-        const recovered = recoverSecret(shares);
-        return recovered.toString();
+        const threshold = shares.length;
+        const secretLength = shares[0].length - 1; // y座標の長さ
+        let secret = Buffer.alloc(secretLength);
+        for (let i = 0; i < threshold; i++) {
+            const xi = shares[i].slice(0, 1); // x座標
+            const yi = shares[i].slice(1); // y座標
+            let li = Buffer.from([1]);
+            console.log(`Processing share ${i}: xi=${xi.toString('hex')}, yi=${yi.toString('hex')}`);
+            for (let j = 0; j < threshold; j++) {
+                if (i !== j) {
+                    const xj = shares[j].slice(0, 1);
+                    const numerator = bufferSub(xj, Buffer.from([0]));
+                    const denominator = bufferSub(xj, xi);
+                    console.log(`  Comparing xi=${xi.toString('hex')} with xj=${xj.toString('hex')}`);
+                    console.log(`  Numerator: ${numerator.toString('hex')}, Denominator: ${denominator.toString('hex')}`);
+                    // ゼロ除算を防ぐ
+                    if (denominator.equals(Buffer.from([0]))) {
+                        console.log(`  Denominator is zero, skipping...`);
+                        continue;
+                    }
+                    li = multiplyBuffers(li, divideBuffers(numerator, denominator));
+                }
+            }
+            secret = xorBuffers(secret, multiplyBuffers(li, yi)); // y座標を使ってシークレットを復元
+        }
+        return secret.toString(); // ここでsecretを文字列に変換
     }
 }
 exports.ShamirSecret = ShamirSecret;
@@ -138,11 +162,11 @@ function xorBuffers(a, b) {
 }
 function recoverSecret(shares) {
     const threshold = shares.length;
-    const secretLength = shares[0].length - 1;
+    const secretLength = shares[0].length - 1; // y座標の長さ
     let secret = Buffer.alloc(secretLength);
     for (let i = 0; i < threshold; i++) {
-        const xi = shares[i].slice(0, 1);
-        const yi = shares[i].slice(1);
+        const xi = shares[i].slice(0, 1); // x座標
+        const yi = shares[i].slice(1); // y座標
         let li = Buffer.from([1]);
         for (let j = 0; j < threshold; j++) {
             if (i !== j) {
@@ -152,7 +176,7 @@ function recoverSecret(shares) {
                 li = multiplyBuffers(li, divideBuffers(numerator, denominator));
             }
         }
-        secret = xorBuffers(secret, multiplyBuffers(li, yi));
+        secret = xorBuffers(secret, multiplyBuffers(li, yi)); // y座標を使ってシークレットを復元
     }
     return secret;
 }
@@ -178,18 +202,17 @@ function divideBuffers(a, b) {
 // 閾値 (threshold) = 多項式の次数 + 1
 // arg_1: 閾値の数。2つ以上のシェアが必要。
 // arg_2: 分割したいシークレット(ex: 秘密鍵)
-const shamirsecret = new ShamirSecret(2, "In the name of Adi Shamir");
+const shamirsecret = new ShamirSecret(2, "nekonekonekkko");
 console.log('shamirsecret:', shamirsecret);
 // Shamirの秘密分散法は多項式補間（ラグランジュ補間）に基づいている
 // x 座標として「シェア番号」を使います。
 // y 座標として「シェアの値」を計算します。
+// シェアを計算
 const s1 = shamirsecret.computeShare(1);
+const s2 = shamirsecret.computeShare(2); // 2つ目のシェアを計算
 console.log('s1:', s1);
-const s2 = shamirsecret.computeShare(2);
 console.log('s2:', s2);
-const s3 = shamirsecret.computeShare(3);
-console.log('s3:', s3);
-// Simulate discarding original secret
+// 2つのシェアを使って復元
 const shamirRecover = new ShamirSecret(2);
-const recovered = shamirRecover.recoverSecret([s1, s3]);
-console.log('Recovered Secret:', recovered);
+const recovered = shamirRecover.recoverSecret([s1, s2]); // 2つのシェアを渡す
+console.log('recovered:', recovered.toString());
