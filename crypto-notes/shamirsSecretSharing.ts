@@ -153,6 +153,8 @@ export function divideBuffers(a: Buffer, b: Buffer): Buffer {
 // a_0 = 秘密情報 (secret)
 // a_1, a_2, ... は乱数で決定される係数 (coefficients)
 // 閾値 (threshold) = 多項式の次数 + 1
+// arg_1: 閾値の数。2つ以上のシェアが必要。
+// arg_2: 分割したいシークレット(ex: 秘密鍵)
 const shamirsecret = new ShamirSecret(2, "In the name of Adi Shamir");
 console.log('shamirsecret:', shamirsecret);
 
@@ -161,7 +163,8 @@ console.log('shamirsecret:', shamirsecret);
 // y 座標として「シェアの値」を計算します。
 const s1 = shamirsecret.computeShare(1);
 console.log('s1:', s1);
-// const s2 = shamirsecret.computeShare(2);
+const s2 = shamirsecret.computeShare(2);
+console.log('s2:', s2);
 // const s3 = shamirsecret.computeShare(3);
 
 // Simulate discarding original secret

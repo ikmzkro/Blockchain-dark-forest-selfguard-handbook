@@ -71,17 +71,17 @@ class ShamirSecret {
         // 1️. 初期化: 多項式の和 (y) を 0 で初期化
         let share = Buffer.alloc(this.secret.length);
         console.log('Initial share (y):', share);
-        // 2️. シェア番号 (x 座標)
-        const x = Buffer.from([shareNumber]);
+        // 2️. シェア番号 (x 座標) をバッファに変換
+        const x = Buffer.from([shareNumber]); // shareNumberをバッファに変換してx座標を作成
         console.log('Share number (x):', x);
         // 3️. 多項式 f(x) を計算
         for (let j = 0; j < this.threshold; j++) {
-            // 各項 a_j * x^j を計算
-            const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j));
+            // 多項式の各項(term) = a_j * x^j を計算
+            const term = multiplyBuffers(this.coefficients[j], bufferExp(x, j)); // j番目の係数とxのj乗を掛け算
             console.log(`Term ${j} (a_${j} * x^${j}):`, term);
             // XOR で多項式の和を加算 (XOR はバイト単位の加算)
-            share = xorBuffers(share, term);
-            console.log(`Accumulated share after term ${j}:`, share);
+            share = xorBuffers(share, term); // 現在のシェアに新しい項を加算
+            console.log(`Accumulated share after term ${j}:`, share); // 現在のシェアの状態を表示
         }
         // 4️. シェアとして (x, y=f(x)) を返す
         return Buffer.concat([x, share]);
@@ -128,6 +128,7 @@ function bufferExp(buffer, exponent) {
  * @returns XOR result buffer.
  */
 function xorBuffers(a, b) {
+    // 配列の範囲外にアクセスすることを防ぎ、エラーを回避する
     const length = Math.min(a.length, b.length);
     const result = Buffer.alloc(length);
     for (let i = 0; i < length; i++) {
