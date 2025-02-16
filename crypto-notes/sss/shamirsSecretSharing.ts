@@ -1,6 +1,3 @@
-/**
- * Shamir's Secret Sharing implementation (TypeScript version inspired by Ruby code).
- */
 import * as crypto from 'crypto';
 
 export class ShamirSecret {
