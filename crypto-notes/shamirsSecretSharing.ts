@@ -165,9 +165,10 @@ const s1 = shamirsecret.computeShare(1);
 console.log('s1:', s1);
 const s2 = shamirsecret.computeShare(2);
 console.log('s2:', s2);
-// const s3 = shamirsecret.computeShare(3);
+const s3 = shamirsecret.computeShare(3);
+console.log('s3:', s3);
 
 // Simulate discarding original secret
-// const shamirRecover = new ShamirSecret(2);
-// const recovered = shamirRecover.recoverSecret([s1, s3]);
-// console.log('Recovered Secret:', recovered);
+const shamirRecover = new ShamirSecret(2);
+const recovered = shamirRecover.recoverSecret([s1, s3]);
+console.log('Recovered Secret:', recovered);
