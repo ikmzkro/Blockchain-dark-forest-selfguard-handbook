@@ -1,32 +1,7 @@
-## 🧩 学習進捗ログ (進化ログ)
-
-### ステージ1: シャミアの秘密分散 (SSS)  
-- [x] SSSの理論学習  
-- [x] Pythonで実装  
-- [x] 復元コードを動作確認  
-✅ ステージ1クリア！ (コミット数: 15)  
-
-### ステージ2: Threshold ECDSA  
-- [ ] ECDSAの理論学習  
-- [ ] 部分署名の実装  
-- [ ] 2of3閾値署名を実装  
-
----
-
-## 📊 コミット数・学習時間の可視化
-
-### GitHubコミット数バッジ（Shields.io使用）
-![GitHub commit count](https://img.shields.io/github/commit-activity/m/your-username/crypto-learning-log)
-
-### 学習時間・コミット数 (WakaTime連携)
-[![wakatime](https://wakatime.com/badge/user/your-wakatime-user-id.svg)](https://wakatime.com/@your-wakatime-user-id)
-
----
-
-## 📝 月次レポートテンプレート
-### 2025年3月の振り返り
-- 総コミット数: XX回
-- 総学習時間: XX時間
-- 学んだ技術: SSS, Threshold ECDSA
-- 成長の実感: (一言)
-- 課題・次月の目標: AWS Nitro Enclavesハンズオン
+## [![Repography logo](https://images.repography.com/logo.svg)](https://repography.com) / Recent activity [![Time period](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_badge.svg)](https://repography.com)
+[![Timeline graph](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_timeline.svg)](https://github.com/_/crypto-notes/commits)
+[![Issue status graph](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_issues.svg)](https://github.com/_/crypto-notes/issues)
+[![Pull request status graph](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_prs.svg)](https://github.com/_/crypto-notes/pulls)
+[![Trending topics](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_words.svg)](https://github.com/_/crypto-notes/commits)
+[![Top contributors](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_users.svg)](https://github.com/_/crypto-notes/graphs/contributors)
+[![Activity map](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_map.svg)](https://github.com/_/crypto-notes/commits)
