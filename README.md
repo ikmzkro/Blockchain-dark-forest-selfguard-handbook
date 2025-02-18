@@ -5,3 +5,6 @@
 [![Trending topics](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_words.svg)](https://github.com/_/crypto-notes/commits)
 [![Top contributors](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_users.svg)](https://github.com/_/crypto-notes/graphs/contributors)
 [![Activity map](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_map.svg)](https://github.com/_/crypto-notes/commits)
+
+## [![Repography logo](https://images.repography.com/logo.svg)](https://repography.com) / Structure
+[![Structure](https://images.repography.com/0/tu59iUjccG-kc9NwkCHzJnVtP56580B8IjSkB5z_9KU/structure/vOLh5SlCr6AjqkKnnLHrNWmnUG1bEEBwS8vwg1WHaYk/wzWmhqFiA9QjcJvyqIbsUhXqs_iYG5niSbK-33vDGco_table.svg)](https://github.com/_/crypt-notes)
