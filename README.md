@@ -1,10 +1,59 @@
-## [![Repography logo](https://images.repography.com/logo.svg)](https://repography.com) / Recent activity [![Time period](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_badge.svg)](https://repography.com)
-[![Timeline graph](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_timeline.svg)](https://github.com/_/crypto-notes/commits)
-[![Issue status graph](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_issues.svg)](https://github.com/_/crypto-notes/issues)
-[![Pull request status graph](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_prs.svg)](https://github.com/_/crypto-notes/pulls)
-[![Trending topics](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_words.svg)](https://github.com/_/crypto-notes/commits)
-[![Top contributors](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_users.svg)](https://github.com/_/crypto-notes/graphs/contributors)
-[![Activity map](https://images.repography.com/0/WhEw6B53vi5ObWFN5xOeMpd-AWVHRNu15MXgh7Na6jY/recent-activity/Y8T_O95MtHuAv655lpW7TuMWYLZtc5EmlAbgdUqIok8/b9H38whPY_YOeUMBGZgZJpfALI9oq9eartvR4KlezE8_map.svg)](https://github.com/_/crypto-notes/commits)
+以下は、**FireBlocks特化型チェックリスト**を拡張し、Azure、HDウォレット、AWS KMSを含めた完全版のテンプレートです。
 
-## [![Repography logo](https://images.repography.com/logo.svg)](https://repography.com) / Structure
-[![Structure](https://images.repography.com/0/tu59iUjccG-kc9NwkCHzJnVtP56580B8IjSkB5z_9KU/structure/vOLh5SlCr6AjqkKnnLHrNWmnUG1bEEBwS8vwg1WHaYk/wzWmhqFiA9QjcJvyqIbsUhXqs_iYG5niSbK-33vDGco_table.svg)](https://github.com/_/crypt-notes)
+---
+
+## 🚀 **FireBlocks特化型チェックリスト（完全版）**
+
+### 🔑 **1. FireBlocks基盤構築**
+- [ ] FireBlocks Workspace構築・Vault設定  
+- [ ] APIクレデンシャル生成とセキュリティ設定  
+- [ ] Vaultアカウントの作成と資産管理  
+
+---
+
+### ☁️ **2. FireBlocks SDK実装**
+- [ ] SDKを用いた送金・受領・トランザクション確認  
+- [ ] マルチシグスキームの署名プロセス実装  
+- [ ] Webhook設定とイベント通知管理  
+
+---
+
+### 🔒 **3. Nitro Enclaves / Azure鍵管理**
+#### **AWS Nitro Enclaves**
+- [ ] Nitro Enclaves環境構築  
+- [ ] Enclaves上で秘密鍵生成・保護  
+- [ ] AWS KMS連携と鍵管理強化  
+
+#### **Azure Enclaves**
+- [ ] Azure Confidential Compute（SGX）環境構築  
+- [ ] Key Vaultによる鍵生成と保護  
+- [ ] Azure Managed HSMとの連携  
+
+---
+
+### 📦 **4. スマートコントラクト対応**
+- [ ] ERC4337アカウントアブストラクションの理解  
+- [ ] Biconomyを活用したガスレストランザクション設定  
+- [ ] ERC2771メタトランザクションの実装  
+
+---
+
+### 🟡 **5. 暗号技術理解**
+- [ ] シャミアの秘密分散法（SSS）  
+- [ ] Threshold ECDSAの実装  
+- [ ] TSS（Threshold Signature Scheme）  
+- [ ] シュノア署名と検証  
+- [ ] ECDSA署名と検証  
+- [ ] HDウォレット（BIP32, BIP39, BIP44）  
+- [ ] AWS KMSによる鍵生成と管理  
+
+---
+
+### 📈 **6. ドキュメントとアウトプット**
+- [ ] FireBlocksアーキテクチャ説明資料作成  
+- [ ] GitHubに構築手順とサンプルコード公開  
+- [ ] 技術記事（週1回）を投稿  
+
+---
+
+このチェックリストをGitHubのREADMEに貼り付けることで、各項目の進捗を明確に把握しながらスキルを深められます。
