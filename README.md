@@ -19,7 +19,9 @@
 - [ ] RSAおよびAES-GCMによるデータ暗号化  
 
 **参考文献:**
-- [ ] 
+- [ ] https://techblog.gaudiy.com/entry/2022/06/17/122714
+- [ ] https://tech.andgo.co.jp/entry/2024/05/25/140838
+- [ ] https://kimh.github.io/blog/jp/security/protect-your-secret-key-with-shamirs-secret-sharing-jp/
 
 ---
 
@@ -110,7 +112,7 @@
 - [ ] **JSON Web Token (JWT)によるAPI認証:** トークンを用いた安全なAPIアクセス管理 
 
 **参考文献:**
-- [ ] 
+- [ ] https://zenn.dev/mizuneko4345/scraps/d4868236b9c7ad
 
 ---
 
